@@ -2,7 +2,7 @@
 const games = ` [
   {
     "name": "Heroes Of Mythic Americas",
-    "description": "An exciting 5e RPG supplement that heroically represents pre-Columbian American cultures and mythologies",
+    "description": "An exciting 5e RPG supplement that heroically represents pre-Columbian American cultures and mythologies.",
     "pledged": 1572,
     "goal": 10000,
     "backers": 9,
@@ -10,7 +10,7 @@ const games = ` [
   },
   {
     "name": "Cube Monster",
-    "description": "Be the first champion to reach the top of Mount Kubia in a solo or competitive engine building strategy game",
+    "description": "Be the first champion to reach the top of Mount Kubia in a solo or competitive engine building strategy game.",
     "pledged": 29446,
     "goal": 20000,
     "backers": 321,
@@ -50,7 +50,7 @@ const games = ` [
   },
   {
     "name": "Frosthaven",
-    "description": "Euro-inspired dungeon crawling sequel to the 2017 smash hit Gloomhaven",
+    "description": "Euro-inspired dungeon crawling sequel to the 2017 smash hit Gloomhaven.",
     "pledged": 69608,
     "goal": 500000,
     "backers": 3193,
@@ -58,7 +58,7 @@ const games = ` [
   },
   {
     "name": "Mislight - An Adventure Game With A Small Touch Of Thriller",
-    "description": "Be the Light in a realm of Darkness",
+    "description": "Be the Light in a realm of Darkness.",
     "pledged": 1036,
     "goal": 3099,
     "backers": 32,
@@ -82,7 +82,7 @@ const games = ` [
   },
   {
     "name": "Kingdom Death: Monster 1.5",
-    "description": "A cooperative nightmare horror game experience",
+    "description": "A cooperative nightmare horror game experience.",
     "pledged": 94139,
     "goal": 100000,
     "backers": 9264,
