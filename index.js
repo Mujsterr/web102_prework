@@ -8,7 +8,7 @@
 import GAMES_DATA from './games.js';
 
 // create a list of objects to store the data about the games using JSON.parse
-const GAMES_JSON = JSON.parse(GAMES_DATA)
+const GAMES_JSON = JSON.parse(GAMES_DATA);
 
 // remove all child elements from a parent element in the DOM
 function deleteChildElements(parent) {
@@ -29,7 +29,7 @@ const gamesContainer = document.getElementById("games-container");
 function addGamesToPage(games) {
 
     // loop over each item in the data
-        for(let i = 0; i < GAMES_JSON.length; i++) {
+        for(let i = 0; i < games.length; i++) {
 
         // create a new div element, which will become the game card
             const newDiv = document.createElement("div");
@@ -41,22 +41,22 @@ function addGamesToPage(games) {
         // about each game
         // TIP: if your images are not displaying, make sure there is space
         // between the end of the src attribute and the end of the tag ("/>")
-            newDiv.innerHTML = `<strong>${GAMES_JSON[i].name}</strong> <br>
-                                ${GAMES_JSON[i].description} <br>
-                                Pledged: ${GAMES_JSON[i].pledged} <br>
-                                Goal: ${GAMES_JSON[i].goal} <br>
-                                Backers: ${GAMES_JSON[i].backers} <br>
-                                <img src=${GAMES_JSON[i].img} class="game-img"> <br>`;
+            newDiv.innerHTML = `<strong>${games[i].name}</strong> <br>
+                                ${games[i].description} <br>
+                                Pledged: ${games[i].pledged} <br>
+                                Goal: ${games[i].goal} <br>
+                                Backers: ${games[i].backers} <br>
+                                <img src=${games[i].img} class="game-img"> <br>`;
 
         // append the game to the games-container
             document.getElementById("games-container").append(newDiv);
         }
 
 }
-addGamesToPage(GAMES_JSON);
 // call the function we just defined using the correct variable
 // later, we'll call this function using a different list of games
 
+addGamesToPage(GAMES_JSON);
 
 /*************************************************************************************
  * Challenge 4: Create the summary statistics at the top of the page displaying the
@@ -86,7 +86,7 @@ const totalRaised = GAMES_JSON.reduce((total, game) => {
 
 // set inner HTML using template literal
 
-raisedCard.innerHTML = `${totalRaised.toLocaleString('en-CA')}`;
+raisedCard.innerHTML = `$${totalRaised.toLocaleString('en-CA')}`;
 
 // grab number of games card and set its inner HTML
 const gamesCard = document.getElementById("num-games");
@@ -106,9 +106,11 @@ function filterUnfundedOnly() {
 
     // use filter() to get a list of games that have not yet met their goal
 
+    const unfundedOnlyList = GAMES_JSON.filter((game) => game.pledged < game.goal);
 
     // use the function we previously created to add the unfunded games to the DOM
 
+    addGamesToPage(unfundedOnlyList);
 }
 
 // show only games that are fully funded
@@ -117,9 +119,10 @@ function filterFundedOnly() {
 
     // use filter() to get a list of games that have met or exceeded their goal
 
+    const fundedOnlyList = GAMES_JSON.filter((game) => game.pledged >= game.goal);
 
     // use the function we previously created to add unfunded games to the DOM
-
+    addGamesToPage(fundedOnlyList);
 }
 
 // show all games
@@ -127,7 +130,7 @@ function showAllGames() {
     deleteChildElements(gamesContainer);
 
     // add all games from the JSON data to the DOM
-
+    addGamesToPage(GAMES_JSON);
 }
 
 // select each button in the "Our Games" section
@@ -137,6 +140,9 @@ const allBtn = document.getElementById("all-btn");
 
 // add event listeners with the correct functions to each button
 
+unfundedBtn.addEventListener("click", filterUnfundedOnly);
+fundedBtn.addEventListener("click", filterFundedOnly);
+allBtn.addEventListener("click", showAllGames);
 
 /*************************************************************************************
  * Challenge 6: Add more information at the top of the page about the company.
@@ -162,10 +168,12 @@ const descriptionContainer = document.getElementById("description-container");
 const firstGameContainer = document.getElementById("first-game");
 const secondGameContainer = document.getElementById("second-game");
 
-const sortedGames =  GAMES_JSON.sort( (item1, item2) => {
+// Added slice() method so that we don't mutate the original arrays order and instead create a new array!
+const sortedGames =  GAMES_JSON.slice().sort( (item1, item2) => {
     return item2.pledged - item1.pledged;
 });
 
+console.log(sortedGames);
 // use destructuring and the spread operator to grab the first and second games
 
 // create a new element to hold the name of the top pledge game, then append it to the correct element
