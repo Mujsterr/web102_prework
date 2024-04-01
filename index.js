@@ -11,10 +11,11 @@ import GAMES_DATA from './games.js';
 const GAMES_JSON = JSON.parse(GAMES_DATA);
 
 // remove all child elements from a parent element in the DOM
-function deleteChildElements(parent) {
-    while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
-    }
+// modified to only remove game-card divs
+function deleteGameContainerChildren() {
+    document.querySelectorAll(".game-card").forEach( div => {
+        div.parentNode.removeChild(div)
+    });
 }
 
 /*****************************************************************************
@@ -22,11 +23,14 @@ function deleteChildElements(parent) {
  * Skills used: DOM manipulation, for loops, template literals, functions
 */
 
+// OPTIONAL TOUCHUP: optimized version of the addGamesToPage using document fragments:)
 // grab the element with the id games-container
 const gamesContainer = document.getElementById("games-container");
 
 // create a function that adds all data from the games array to the page
 function addGamesToPage(games) {
+     // we create a lightweight copy of the document
+    const fragment = document.createDocumentFragment();
 
     // loop over each item in the data
         for(let i = 0; i < games.length; i++) {
@@ -39,18 +43,17 @@ function addGamesToPage(games) {
 
         // set the inner HTML using a template literal to display some info 
         // about each game
-        // TIP: if your images are not displaying, make sure there is space
-        // between the end of the src attribute and the end of the tag ("/>")
             newDiv.innerHTML = `<img src=${games[i].img} class="game-img"> <br><br>
                                 <strong>${games[i].name}</strong> <br> <br>
                                 ${games[i].description} <br><br>
                                 Pledged: ${games[i].pledged} <br>
                                 Goal: ${games[i].goal} <br>
                                 Backers: ${games[i].backers} <br>`;
-
-        // append the game to the games-container
-            document.getElementById("games-container").append(newDiv);
+            // we append our new div to the fragment instead of the DOM node
+            fragment.append(newDiv);
         }
+        // once we have created all the elements we want, we can simply append it
+        document.getElementById("games-container").append(fragment);
 
 }
 // call the function we just defined using the correct variable
@@ -103,9 +106,11 @@ gamesCard.innerHTML = `${GAMES_JSON.length}`;
  * Skills used: functions, filter
 */
 
+const interactContainer = document.getElementById("interaction-container");
 // show only games that do not yet have enough funding
 function filterUnfundedOnly() {
-    deleteChildElements(gamesContainer);
+    interactContainer.scrollIntoView(true);
+    deleteGameContainerChildren();
 
     // use filter() to get a list of games that have not yet met their goal
 
@@ -118,7 +123,8 @@ function filterUnfundedOnly() {
 
 // show only games that are fully funded
 function filterFundedOnly() {
-    deleteChildElements(gamesContainer);
+    interactContainer.scrollIntoView(true);
+    deleteGameContainerChildren();
 
     // use filter() to get a list of games that have met or exceeded their goal
 
@@ -130,7 +136,8 @@ function filterFundedOnly() {
 
 // show all games
 function showAllGames() {
-    deleteChildElements(gamesContainer);
+    interactContainer.scrollIntoView(true);
+    deleteGameContainerChildren();
 
     // add all games from the JSON data to the DOM
     addGamesToPage(GAMES_JSON);
@@ -175,7 +182,7 @@ const fundingStatus = `A total of ${formattedTotalRaised} has been raised for ${
 
 const fundingStatusText = document.createElement("p");
 fundingStatusText.innerHTML = fundingStatus;
-document.getElementById("description-container").append(fundingStatusText);
+descriptionContainer.append(fundingStatusText);
 
 /************************************************************************************
  * Challenge 7: Select & display the top 2 games
@@ -199,11 +206,75 @@ const [firstGame, secondGame, ...rest ] = sortedGames;
 const topFundedGame = document.createElement("p");
 topFundedGame.innerHTML = firstGame.name;
 
-document.getElementById("first-game").append(topFundedGame);
+firstGameContainer.append(topFundedGame);
 
 // do the same for the runner up item
 
 const runnerUpGame = document.createElement("p");
 runnerUpGame.innerHTML = secondGame.name;
 
-document.getElementById("second-game").append(runnerUpGame);
+secondGameContainer.append(runnerUpGame);
+
+// Extra features: Search bar!
+
+// validating that the input is alpha-numeric (with potential spaces)
+function validateInput(input) {
+    return /^[a-z0-9\s]+$/.test(input);
+}
+
+// used for debouncing our update function so that the search is not filtered after every key press
+// but instead after a user stops typing for a set time
+function debounce(func, delay) {
+    let timeout;
+
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func(...args)
+        }, delay);
+    }
+}
+
+// a debounced function which updates the gamesContainer based on the user's search
+const updateGameResults = debounce((input) => {
+
+    // check if the input box is empty, then display all the games without a filter
+    if (!input.length) {
+        showAllGames();
+        error.style.display = "none";
+        return;
+    }
+
+    if (validateInput(input)) {
+        const gameCards = document.querySelectorAll(".game-card");
+        let results = GAMES_JSON.filter(game => {
+            return game.name.toLowerCase().includes(input);
+        });
+        
+        // remove all the game cards
+        gameCards.forEach((div) => {
+            div.parentNode.removeChild(div);
+        });
+
+        // show an error message if results array is empty otherwise populate the gamesContainer with the results
+        if (!results.length) {
+            error.innerHTML = `<strong>${input}</strong> could not be found... :(`;
+            error.style.display = "block";
+        } 
+        else {
+            addGamesToPage(results);
+            error.style.display = "none";
+        }
+    }
+}, 500);
+
+const error = document.createElement("p");
+error.classList.add("error");
+gamesContainer.append(error);
+
+const searchInput = document.getElementById("search-bar");
+
+searchInput.addEventListener('input', (event) => {
+    let input = event.target.value.trim().toLowerCase();
+    updateGameResults(input);
+});
