@@ -19,11 +19,7 @@ The following **optional** features are implemented:
 
 - [x] Search bar!
 
-## Video Walkthrough
-
-Here's a walkthrough of implemented features:
-
-<img src='https://www.loom.com/share/eb9340d68cd44976adb9d5d081d9994d?sid=41c22853-9e58-436c-92a3-c294f736a24e' title='Video Walkthrough' width='100%' alt='Video Walkthrough' />
+![Kapture 2024-04-03 at 03 05 55](https://github.com/Mujsterr/web102_prework/assets/70026956/bfa25713-ea18-4f39-9177-6cd8a2563589)
 
 ## Notes
 
@@ -32,6 +28,7 @@ Here's a walkthrough of implemented features:
 - Loved working on the search bar implementation and researching ways to achieve optimal performance as well as make it user friendly!
 
 **This assessment was done purely as a means for learning :)**
+
 
 ## License
 
